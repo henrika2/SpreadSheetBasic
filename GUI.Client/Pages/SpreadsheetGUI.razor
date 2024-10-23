@@ -1,0 +1,199 @@
+﻿@page "/spreadsheet"
+@rendermode InteractiveAuto
+@inject IJSRuntime JS  // <remarks> Allows the "communication"/use of javascript </remarks>
+@inject NavigationManager Navigator
+
+@namespace SpreadsheetNS  
+
+@using System.Diagnostics
+
+<NavigationLock ConfirmExternalNavigation="true"
+                OnBeforeInternalNavigation="OnBeforeLeavePage" />
+
+<PageTitle>Starter Code</PageTitle>
+
+<h1>Simple SpreadSheet GUI @(false ? "*" : "")</h1>
+
+@* <remarks> Example of how to have two pages or an "alert" GUI. </remarks> *@
+@if (SaveGUIView)
+{
+    <label for="SavefileName">Name:</label>
+    <input id="SaveFileName" @bind="SaveFileName" type="text">
+
+    <br/>
+
+    <button class="btn btn-primary" @onclick="HandleSaveFile">Save</button>
+    <button class="btn btn-primary" @onclick="() => ShowHideSaveGUI(false)">Cancel</button>
+}
+else
+{
+    <div id="toolbar">
+        <div>
+            <label for="FormulaContent">Content:</label>
+            <input name="FormulaContent" id="FormulaContent" @ref="FormulaContentEditableInput" value="@InputWidgetBackingStore" @onchange="ChangeSpreadsheetCellValue" />
+        </div>
+    </div>
+
+    <div class="container" style="cursor: pointer;">
+        <div class="table-container">
+            <div class="scrollable">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr class="fixed-header">
+                            <th scope="col">&nbsp;</th>
+                            @for ( int col = 0; col < 10; col++ )
+                            {
+                                <th scope="col">@Alphabet[col]</th>
+                            }
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @for ( int row = 0; row < 10; row++ )
+                        {
+                            <tr style="padding:0px !important;">
+                                <th style="padding:0px !important;" scope="row" class="fixed-column">@(row + 1)</th>
+                                @for ( int col = 0; col < 10; col++ )
+                                {
+                                    int r = row;
+                                    int c = col;
+                                    <td class="@CellsClassBackingStore[r,c]"  @onclick="() => FocusMainInput(r,c)">
+                                        <span title="@CellsBackingStore[r,c] "class="SpreadsheetCell">@CellsBackingStore[r, c]</span>
+                                    </td>
+                                }
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="FileMenu">
+        <h2>File Menu</h2>
+        <div id="FileHandlers">
+            <button class="btn btn-primary" @onclick="HandleClear">Clear</button>
+            <button class="btn btn-primary" @onclick="() => ShowHideSaveGUI(true)">Save</button>
+            <div id="hideUglyWidget">
+                <InputFile id="inputwidget" name="abc" class="custom-input" type="file" OnChange="HandleLoadFile" />
+            </div>
+            <label for="inputwidget" class="btn btn-primary">Load</label>
+            <br/>
+
+            <label for="RowsInput"> Number of Rows: </label>
+            <input name="RowsInput" id="RowsInput" min="1" max="10"/>
+            <label for="ColsInput"> Number of Cols: </label>
+            <input name="ColsInput" id="ColsInput" min="1" max="10"/>
+        </div>
+    </div>
+}
+
+@code
+{
+    // <remark> 
+    //   The code in this section should be 100% GUI related.  Otherwise
+    //   place the code in the .cs file.
+    // </remark>
+
+    /// <summary>
+    ///   Direct reference to the html element (so we can focus it).
+    /// </summary>
+    private ElementReference FormulaContentEditableInput;
+
+    /// <summary>
+    ///   The value of the main input widget where users type
+    ///   their formulas and numbers and strings.
+    /// </summary>
+    private string InputWidgetBackingStore = "";
+
+    /// <summary>
+    ///   The name of the file that we want to download to.
+    /// </summary>
+    private string SaveFileName = "Spreadsheet.sprd";
+
+    /// <summary>
+    ///   When a cell is clicked on, put the focus on the main
+    ///   widget and update the toolbar.
+    /// </summary>
+    /// <param name="row"></param>
+    /// <param name="col"></param>
+    private void FocusMainInput( int row, int col )
+    {
+        // FIXME: show the user which cell was clicked on
+        UpdateToolbar();
+        HighlightCell(row, col);
+
+        FormulaContentEditableInput.FocusAsync(); // <remarks> move focus back to input widget. </remarks>
+    }
+
+    /// <summary>
+    ///   Make the value and content display/input of the tool bar match the
+    ///   spreadsheet.
+    /// </summary>
+    private void UpdateToolbar()
+    {
+        InputWidgetBackingStore = "hi there";
+
+        StateHasChanged();
+    }
+
+    /// <summary>
+    ///   Outline the current cell. erase outlines from everyone else.
+    /// </summary>
+    /// <param name="theRow">the cell's row.</param>
+    /// <param name="theCol">the cell's col.</param>
+    private void HighlightCell(int theRow, int theCol)
+    {
+        // FIXME: shouldn't use magic constants (e.g., 10).
+        // probably should just remember the last cell and empty its backing store.
+        for (int row=0;row<10;row++)
+        {
+            for (int col=0;col<10;col++)
+            {
+                CellsClassBackingStore[row, col] = string.Empty;
+            }
+        }
+
+        CellsClassBackingStore[theRow, theCol] = "selected";
+    }
+
+    /// <summary>
+    ///   When the header widget for cell contents is changed, update
+    ///   the spreadsheet.
+    /// </summary>
+    /// <param name="eventArgs"></param>
+    private void ChangeSpreadsheetCellValue( ChangeEventArgs eventArgs )
+    {
+        // FIXME: determine the currently select row, col (hint: it should be saved)
+        int row = 0;
+        int col = 0;
+
+        string newInput = eventArgs.Value?.ToString() ?? "oops";
+        InputWidgetBackingStore = newInput;
+
+        HandleUpdateCellInSpreadsheet( newInput, row, col );
+
+        UpdateToolbar();
+    }
+
+    /// <summary>
+    ///   What to do before the browser is allowed to leave the page.
+    /// </summary>
+    /// <param name="context"></param>
+    /// <returns></returns>
+    private async Task OnBeforeLeavePage( LocationChangingContext context )
+    {
+        if ( true ) // FIXME: don't confirm if the sheet is not changed.
+        {
+            var isConfirmed = await JS.InvokeAsync<bool>(
+                "confirm",
+                "Are you sure you want to navigate away?");
+
+            if (!isConfirmed)
+            {
+                context.PreventNavigation();
+            }
+        }
+    }
+
+}

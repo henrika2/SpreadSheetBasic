@@ -8,6 +8,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1C334A2E-7942-4CD2-82F5-BE26D4FD0B52}"
 	ProjectSection(SolutionItems) = preProject
 		editorconfig = editorconfig
+		GUI.Client\Program.cs = GUI.Client\Program.cs
 		README.md = README.md
 	EndProjectSection
 EndProject
@@ -19,7 +20,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DependencyGraph", "Dependen
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spreadsheet", "Spreadsheet\Spreadsheet.csproj", "{BB50BFC5-945E-419D-B6E7-4152C849D741}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpreadsheetTests", "SpreadsheetTests\SpreadsheetTests.csproj", "{7331DA29-728E-414D-A9C6-2F9B27D60998}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpreadsheetTests", "SpreadsheetTests\SpreadsheetTests.csproj", "{7331DA29-728E-414D-A9C6-2F9B27D60998}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GUI", "GUI\GUI.csproj", "{F83D7CD4-B104-42AD-BC59-2C69EBCB8F50}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GUI.Client", "GUI.Client\GUI.Client.csproj", "{A89D0359-AF8C-4033-AAAD-C30A5A39B725}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +56,14 @@ Global
 		{7331DA29-728E-414D-A9C6-2F9B27D60998}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7331DA29-728E-414D-A9C6-2F9B27D60998}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7331DA29-728E-414D-A9C6-2F9B27D60998}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F83D7CD4-B104-42AD-BC59-2C69EBCB8F50}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F83D7CD4-B104-42AD-BC59-2C69EBCB8F50}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F83D7CD4-B104-42AD-BC59-2C69EBCB8F50}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F83D7CD4-B104-42AD-BC59-2C69EBCB8F50}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A89D0359-AF8C-4033-AAAD-C30A5A39B725}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A89D0359-AF8C-4033-AAAD-C30A5A39B725}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A89D0359-AF8C-4033-AAAD-C30A5A39B725}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A89D0359-AF8C-4033-AAAD-C30A5A39B725}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
