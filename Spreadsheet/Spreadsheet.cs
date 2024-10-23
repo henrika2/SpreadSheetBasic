@@ -284,6 +284,8 @@ public class Spreadsheet
     /// </exception>
     public object GetCellValue(string cellName)
     {
+        cellName = cellName.ToUpper();
+
         // if name is invalid, throw exception
         this.ValidateCellName(cellName);
 
