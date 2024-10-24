@@ -47,6 +47,8 @@ public partial class SpreadsheetGUI
     private int inputRows = 10;
     private int inputCols = 10;
 
+    private string messageError = string.Empty;
+
     private Spreadsheet? currentSpreadSheet;
 
     /// <summary>
@@ -115,6 +117,7 @@ public partial class SpreadsheetGUI
     {
         this.currentSpreadSheet = new();
         InitializeBackingStores();
+        HighlightCell(curRow, curCol);
     }
 
     /// <summary>
@@ -178,9 +181,11 @@ public partial class SpreadsheetGUI
     /// <param name="col"> The matrix column identifier. </param>
     private async void HandleUpdateCellInSpreadsheet( string newInput, int row, int col )
     {
+        string oldContent = TurnContenCellSameAsSetContent(row, col);
         try
         {
             IList<string> all_dependents = currentSpreadSheet!.SetContentsOfCell(CellNameFromRowCol(row, col), newInput);
+            CellsClassBackingStore[row, col] = newInput;
             SetValueForCellsBackingStore(row, col);
 
             foreach (string cell in all_dependents)
@@ -189,10 +194,20 @@ public partial class SpreadsheetGUI
                 SetValueForCellsBackingStore(rowOfDepentdent, colOfDependent);
             }
         }
+        catch (FormulaFormatException e)
+        {
+            currentSpreadSheet!.SetContentsOfCell(CellNameFromRowCol(row, col), oldContent);
+            messageError = e.Message;
+        }
+        catch (CircularException e)
+        {
+            currentSpreadSheet!.SetContentsOfCell(CellNameFromRowCol(row, col), oldContent);
+            messageError = e.Message;
+        }
         catch
         {
             // a way to communicate to the user that something went wrong.
-            await JS.InvokeVoidAsync( "alert", "Something went wrong." );
+            await JS.InvokeVoidAsync("alert", "Something went wrong.");
         }
     }
 
@@ -370,23 +385,38 @@ public partial class SpreadsheetGUI
         StateHasChanged(); // Refresh the UI
     }
 
-    private object CurrentVal(string cellName)
+    private object SetValueForCellsBackingStore(string cellName)
     {
-        return this.currentSpreadSheet?.GetCellValue(cellName)?.ToString() ?? string.Empty;
-    }
-
-    private bool SetValueForCellsBackingStore(int row, int col)
-    {
-        object curVal = CurrentVal(CellNameFromRowCol(row, col));
+        object curVal = this.currentSpreadSheet?.GetCellValue(cellName) ?? "null variable";
+        ConvertCellNameToRowCol(cellName, out int row, out int col);
         if (curVal is FormulaError error)
         {
             this.CellsBackingStore[row, col] = error.Reason;
-            return true;
         }
         else
         {
             this.CellsBackingStore[row, col] = curVal?.ToString() ?? string.Empty;
-            return false;
         }
+
+        return this.CellsBackingStore[row, col];
+    }
+
+    private string SetValueForCellsBackingStore(int row, int col)
+    {
+        string cellName = CellNameFromRowCol(row, col);
+        string value = this.SetValueForCellsBackingStore(cellName)?.ToString() ?? "null variable";
+        return value;
+    }
+
+    private string TurnContenCellSameAsSetContent(int row, int col)
+    {
+        string cellName = CellNameFromRowCol(row, col);
+        object content = currentSpreadSheet?.GetCellContents(cellName) ?? string.Empty;
+        if (content is string text)
+        {
+            return text;
+        }
+
+        return "=" + content!.ToString();
     }
 }

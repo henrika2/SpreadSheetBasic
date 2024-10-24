@@ -29,7 +29,7 @@ else
 {
     <div id="toolbar">
         <div>
-            <label for="SelectedCell">Selected Cell: @curCell</label>
+            <label for="SelectedCell">Selected Cell:</label>
             <input name="SelectedCell" id="SelectedCell" value="@curCell" readonly />
 
             <label for="SelectedValue">Value:</label>
@@ -90,6 +90,7 @@ else
             <input name="RowsInput" id="RowsInput" placeholder="10" min="1" max="99" @onchange="newInputRows" />
             <label for="ColsInput"> Number of Cols: </label>
             <input name="ColsInput" id="ColsInput" placeholder="10" min="1" max="26" @onchange="newInputCols" />
+            <p>@messageError</p>
         </div>
     </div>
 }
@@ -101,12 +102,11 @@ else
     //   place the code in the .cs file.
     // </remark>
 
-    private int curRow;
+    private int curRow = 0;
 
-    private int curCol;
+    private int curCol = 0;
 
     private string curCell = "A1";
-
 
     /// <summary>
     ///   Direct reference to the html element (so we can focus it).
@@ -145,7 +145,7 @@ else
     /// </summary>
     private void UpdateToolbar()
     {
-        InputWidgetBackingStore = currentSpreadSheet?.GetCellContents(curCell)?.ToString() ?? "";
+        InputWidgetBackingStore = TurnContenCellSameAsSetContent(curRow, curCol);
 
         StateHasChanged();
     }
@@ -178,7 +178,6 @@ else
     {
 
         string newInput = eventArgs.Value?.ToString() ?? "oops";
-        currentSpreadSheet?.SetContentsOfCell(curCell, newInput);
         InputWidgetBackingStore = newInput;
 
         HandleUpdateCellInSpreadsheet( newInput, curRow, curCol );
