@@ -5,10 +5,10 @@
 
 namespace SpreadsheetNS;
 
+using CS3500.Formula;
 using CS3500.Spreadsheet;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
-using Microsoft.AspNetCore.Components.Routing;
 using Microsoft.JSInterop;
 using System;
 using System.Diagnostics;
@@ -38,6 +38,15 @@ using System.Diagnostics;
 /// </summary>
 public partial class SpreadsheetGUI
 {
+    // Define max rows and columns allowed
+    private const int MaxColumns = 26;
+
+    private const int MaxRows = 99;
+
+    // Current grid size (initialized to 10x10)
+    private int inputRows = 10;
+    private int inputCols = 10;
+
     private Spreadsheet? currentSpreadSheet;
 
     /// <summary>
@@ -105,6 +114,7 @@ public partial class SpreadsheetGUI
     protected override void OnInitialized( )
     {
         this.currentSpreadSheet = new();
+        InitializeBackingStores();
     }
 
     /// <summary>
@@ -170,8 +180,14 @@ public partial class SpreadsheetGUI
     {
         try
         {
-            InputWidgetBackingStore = $"{row},{col}";
-            this.currentSpreadSheet!.SetContentsOfCell(CellNameFromRowCol(row, col), newInput);
+            IList<string> all_dependents = currentSpreadSheet!.SetContentsOfCell(CellNameFromRowCol(row, col), newInput);
+            SetValueForCellsBackingStore(row, col);
+
+            foreach (string cell in all_dependents)
+            {
+                ConvertCellNameToRowCol(cell, out int rowOfDepentdent, out int colOfDependent);
+                SetValueForCellsBackingStore(rowOfDepentdent, colOfDependent);
+            }
         }
         catch
         {
@@ -233,7 +249,7 @@ public partial class SpreadsheetGUI
                     for (int col = 0; col < CellsBackingStore.GetLength(1); col++)
                     {
                         string cellName = CellNameFromRowCol(row, col);
-                        CellsBackingStore[row, col] = this.currentSpreadSheet.GetCellContents(cellName)?.ToString() ?? string.Empty;
+                        SetValueForCellsBackingStore(row, col);
                     }
                 }
 
@@ -308,6 +324,69 @@ public partial class SpreadsheetGUI
             }
 
             StateHasChanged();
+        }
+    }
+
+    // Initialize backing stores
+    private void InitializeBackingStores()
+    {
+        for (int row = 0; row < inputRows; row++)
+        {
+            for (int col = 0; col < inputCols; col++)
+            {
+                CellsBackingStore[row, col] = string.Empty;
+                CellsClassBackingStore[row, col] = string.Empty;
+            }
+        }
+    }
+
+    // Handle dynamic resizing
+    private void UpdateGridSize(int newRows, int newCols)
+    {
+        if (newRows > MaxRows || newCols > MaxColumns)
+        {
+            return;
+        }
+
+        // Create new arrays while preserving existing data
+        string[,] newCellsBackingStore = new string[newRows, newCols];
+        string[,] newCellsClassBackingStore = new string[newRows, newCols];
+
+        for (int row = 0; row < inputRows; row++)
+        {
+            for (int col = 0; col < inputCols; col++)
+            {
+                newCellsBackingStore[row, col] = CellsBackingStore[row, col];
+                newCellsClassBackingStore[row, col] = CellsClassBackingStore[row, col];
+            }
+        }
+
+        inputRows = newRows;
+        inputCols = newCols;
+
+        CellsBackingStore = newCellsBackingStore;
+        CellsClassBackingStore = newCellsClassBackingStore;
+
+        StateHasChanged(); // Refresh the UI
+    }
+
+    private object CurrentVal(string cellName)
+    {
+        return this.currentSpreadSheet?.GetCellValue(cellName)?.ToString() ?? string.Empty;
+    }
+
+    private bool SetValueForCellsBackingStore(int row, int col)
+    {
+        object curVal = CurrentVal(CellNameFromRowCol(row, col));
+        if (curVal is FormulaError error)
+        {
+            this.CellsBackingStore[row, col] = error.Reason;
+            return true;
+        }
+        else
+        {
+            this.CellsBackingStore[row, col] = curVal?.ToString() ?? string.Empty;
+            return false;
         }
     }
 }

@@ -6,7 +6,6 @@
 @namespace SpreadsheetNS  
 
 @using System.Diagnostics
-@using CS3500.Spreadsheet
 
 <NavigationLock ConfirmExternalNavigation="true"
                 OnBeforeInternalNavigation="OnBeforeLeavePage" />
@@ -30,7 +29,13 @@ else
 {
     <div id="toolbar">
         <div>
-            <label for="FormulaContent">Cell: @curCell:</label>
+            <label for="SelectedCell">Selected Cell: @curCell</label>
+            <input name="SelectedCell" id="SelectedCell" value="@curCell" readonly />
+
+            <label for="SelectedValue">Value:</label>
+            <input name="SelectedValue" id="SelectedValue" value="@CellsBackingStore[curRow,curCol]" readonly />
+
+            <label for="FormulaContent">Contents:</label>
             <input name="FormulaContent" id="FormulaContent" @ref="FormulaContentEditableInput" value="@InputWidgetBackingStore" @onchange="ChangeSpreadsheetCellValue" />
         </div>
     </div>
@@ -42,7 +47,7 @@ else
                     <thead>
                         <tr class="fixed-header">
                             <th scope="col">&nbsp;</th>
-                            @for ( int col = 0; col < 10; col++ )
+                            @for ( int col = 0; col < inputCols; col++ )
                             {
                                 <th scope="col">@Alphabet[col]</th>
                             }
@@ -50,11 +55,11 @@ else
                     </thead>
 
                     <tbody>
-                        @for ( int row = 0; row < 10; row++ )
+                        @for ( int row = 0; row < inputRows; row++ )
                         {
                             <tr style="padding:0px !important;">
                                 <th style="padding:0px !important;" scope="row" class="fixed-column">@(row + 1)</th>
-                                @for ( int col = 0; col < 10; col++ )
+                                @for ( int col = 0; col < inputCols; col++ )
                                 {
                                     int r = row;
                                     int c = col;
@@ -82,9 +87,9 @@ else
             <br/>
 
             <label for="RowsInput"> Number of Rows: </label>
-            <input name="RowsInput" id="RowsInput" min="1" max="10" @onchange="RowInput" />
+            <input name="RowsInput" id="RowsInput" placeholder="10" min="1" max="99" @onchange="newInputRows" />
             <label for="ColsInput"> Number of Cols: </label>
-            <input name="ColsInput" id="ColsInput" min="1" max="10" @onchange="ColInput"/>
+            <input name="ColsInput" id="ColsInput" placeholder="10" min="1" max="26" @onchange="newInputCols" />
         </div>
     </div>
 }
@@ -95,7 +100,6 @@ else
     //   The code in this section should be 100% GUI related.  Otherwise
     //   place the code in the .cs file.
     // </remark>
-    private Spreadsheet mySpreadSheet = new ();
 
     private int curRow;
 
@@ -103,9 +107,6 @@ else
 
     private string curCell = "A1";
 
-    private int rowInput=10;
-
-    private int colInput=10;
 
     /// <summary>
     ///   Direct reference to the html element (so we can focus it).
@@ -131,8 +132,7 @@ else
     /// <param name="col"></param>
     private void FocusMainInput( int row, int col )
     {
-        // FIXME: show the user which cell was clicked on
-        UpDatedRowColCell(curRow, curCol);
+        UpDatedRowColCell(row, col);
         UpdateToolbar();
         HighlightCell(row, col);
 
@@ -145,7 +145,7 @@ else
     /// </summary>
     private void UpdateToolbar()
     {
-        InputWidgetBackingStore = mySpreadSheet.GetCellContents(curCell)?.ToString() ?? "";
+        InputWidgetBackingStore = currentSpreadSheet?.GetCellContents(curCell)?.ToString() ?? "";
 
         StateHasChanged();
     }
@@ -157,11 +157,9 @@ else
     /// <param name="theCol">the cell's col.</param>
     private void HighlightCell(int theRow, int theCol)
     {
-        // FIXME: shouldn't use magic constants (e.g., 10).
-        // probably should just remember the last cell and empty its backing store.
-        for (int row = 0; row < 10; row++)
+        for (int row = 0; row < inputRows; row++)
         {
-            for (int col = 0; col < 10; col++)
+            for (int col = 0; col < inputCols; col++)
             {
                 CellsClassBackingStore[row, col] = string.Empty;
             }
@@ -180,7 +178,7 @@ else
     {
 
         string newInput = eventArgs.Value?.ToString() ?? "oops";
-        mySpreadSheet.SetContentsOfCell(curCell, newInput);
+        currentSpreadSheet?.SetContentsOfCell(curCell, newInput);
         InputWidgetBackingStore = newInput;
 
         HandleUpdateCellInSpreadsheet( newInput, curRow, curCol );
@@ -208,21 +206,33 @@ else
         }
     }
 
-    private void RowInput(ChangeEventArgs eventArgs)
+    private void newInputRows(ChangeEventArgs eventArgs)
     {
-        int.TryParse(eventArgs.Value?.ToString(), out rowInput);
+        if (int.TryParse(eventArgs.Value?.ToString(), out int newRows))
+        {
+            if (newRows >= 1 && newRows <= MaxRows)
+            {
+                UpdateGridSize(newRows, inputCols);
+            }
+        }
     }
 
-    private void ColInput(ChangeEventArgs eventArgs)
+    private void newInputCols(ChangeEventArgs eventArgs)
     {
-        int.TryParse(eventArgs.Value?.ToString(), out colInput);
+        if (int.TryParse(eventArgs.Value?.ToString(), out int newCols))
+        {
+            if (newCols >= 1 && newCols <= MaxColumns)
+            {
+                UpdateGridSize(inputRows, newCols);
+            }
+        }
     }
 
     private void UpDatedRowColCell(int row, int col)
     {
         curRow = row;
         curCol = col;
-        curCell = Alphabet[col] + "" + (curRow + 1);
+        curCell = CellNameFromRowCol(row,col);
     }
 
 }
