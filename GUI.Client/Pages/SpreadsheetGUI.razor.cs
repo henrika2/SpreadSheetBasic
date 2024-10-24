@@ -1,10 +1,11 @@
-﻿// <copyright file="SpreadsheetGUI.razor.cs" company="UofU-CS3500">
+// <copyright file="SpreadsheetGUI.razor.cs" company="UofU-CS3500">
 // Copyright (c) 2024 UofU-CS3500. All rights reserved.
 // </copyright>
 // Ignore Spelling: Spreadsheeeeeeeeee
 
 namespace SpreadsheetNS;
 
+using CS3500.Spreadsheet;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Components.Routing;
@@ -37,6 +38,8 @@ using System.Diagnostics;
 /// </summary>
 public partial class SpreadsheetGUI
 {
+    private Spreadsheet? currentSpreadSheet;
+
     /// <summary>
     ///    Gets the alphabet for ease of creating columns.
     /// </summary>
@@ -89,8 +92,7 @@ public partial class SpreadsheetGUI
     [JSInvokable]
     public bool HasSpreadSheetChanged(  )
     {
-        Debug.WriteLine( $"{"HasSpreadSheetChanged",-30}: {Navigator.Uri}. Remove Me." );
-        return false;
+        return this.currentSpreadSheet!.Changed;
     }
 
     /// <summary>
@@ -102,7 +104,7 @@ public partial class SpreadsheetGUI
     /// </summary>
     protected override void OnInitialized( )
     {
-        Debug.WriteLine( $"{"OnInitialized",-30}: {Navigator.Uri}. Remove Me." );
+        this.currentSpreadSheet = new();
     }
 
     /// <summary>
@@ -142,9 +144,8 @@ public partial class SpreadsheetGUI
     /// <param name="col"> The returned conversion between column letter and zero based matrix index. </param>
     private static void ConvertCellNameToRowCol( string cellName, out int row, out int col )
     {
-        // FIXME: this needs to be written.
-        col = 0;  // A1 --> (0,0)
-        row = 0;
+        col = cellName[0] - 'A';
+        row = int.Parse(cellName.Substring(1)) - 1;
     }
 
     /// <summary>
@@ -170,9 +171,7 @@ public partial class SpreadsheetGUI
         try
         {
             InputWidgetBackingStore = $"{row},{col}";
-
-            // FIXME: add your connection to the model here.
-            //        then update the GUI as appropriate.
+            this.currentSpreadSheet!.SetContentsOfCell(CellNameFromRowCol(row, col), newInput);
         }
         catch
         {
@@ -196,6 +195,11 @@ public partial class SpreadsheetGUI
         try
         {
             // FIXME: you only need to confirm if the sheet "dirty" (hasn't been changed)
+            if (this.HasSpreadSheetChanged())
+            {
+                return;
+            }
+
             bool success = await JS.InvokeAsync<bool>( "confirm", "Do this?" );
 
             if ( !success )
@@ -220,7 +224,20 @@ public partial class SpreadsheetGUI
 
                 await JS.InvokeVoidAsync( "alert", fileContent );
 
-                // FIXME: you need to do something with this data
+                string tempFilePath = Path.GetTempFileName();
+                File.WriteAllText(tempFilePath, fileContent);
+                this.currentSpreadSheet!.Load(tempFilePath);
+
+                for (int row = 0; row < CellsBackingStore.GetLength(0); row++)
+                {
+                    for (int col = 0; col < CellsBackingStore.GetLength(1); col++)
+                    {
+                        string cellName = CellNameFromRowCol(row, col);
+                        CellsBackingStore[row, col] = this.currentSpreadSheet.GetCellContents(cellName)?.ToString() ?? string.Empty;
+                    }
+                }
+
+                // Force the UI to update
                 StateHasChanged();
             }
         }
@@ -266,11 +283,31 @@ public partial class SpreadsheetGUI
     /// <param name="e"> Ignored. </param>
     private async void HandleClear(Microsoft.AspNetCore.Components.Web.MouseEventArgs e)
     {
-        if ( JSModule is not null )
+        if (JSModule is not null)
         {
-            bool success = await JS.InvokeAsync<bool>( "confirm", "Clear the sheet?" );
-        }
+            if (this.HasSpreadSheetChanged())
+            {
+                bool confirmClear = await JS.InvokeAsync<bool>("confirm", "The spreadsheet has unsaved changes. Are you sure you want to clear it?");
+                if (!confirmClear)
+                {
+                    return;
+                }
+            }
 
-        // FIXME: you know the drill.
+            // Clear the spreadsheet contents
+            this.currentSpreadSheet = new Spreadsheet(); // Reinitialize the spreadsheet
+
+            // Clear the GUI backing store to reflect the cleared spreadsheet
+            for (int row = 0; row < CellsBackingStore.GetLength(0); row++)
+            {
+                for (int col = 0; col < CellsBackingStore.GetLength(1); col++)
+                {
+                    CellsBackingStore[row, col] = string.Empty; // Clear cell contents
+                    CellsClassBackingStore[row, col] = string.Empty; // Clear cell class if needed
+                }
+            }
+
+            StateHasChanged();
+        }
     }
 }
