@@ -6,7 +6,7 @@
 @namespace SpreadsheetNS  
 
 @using System.Diagnostics
-@using CS3500.SpreadSheet
+@using CS3500.Spreadsheet
 
 <NavigationLock ConfirmExternalNavigation="true"
                 OnBeforeInternalNavigation="OnBeforeLeavePage" />
@@ -30,7 +30,7 @@ else
 {
     <div id="toolbar">
         <div>
-            <label for="FormulaContent">Content:</label>
+            <label for="FormulaContent">Cell: @curCell:</label>
             <input name="FormulaContent" id="FormulaContent" @ref="FormulaContentEditableInput" value="@InputWidgetBackingStore" @onchange="ChangeSpreadsheetCellValue" />
         </div>
     </div>
@@ -82,9 +82,9 @@ else
             <br/>
 
             <label for="RowsInput"> Number of Rows: </label>
-            <input name="RowsInput" id="RowsInput" min="1" max="10"/>
+            <input name="RowsInput" id="RowsInput" min="1" max="10" @onchange="RowInput" />
             <label for="ColsInput"> Number of Cols: </label>
-            <input name="ColsInput" id="ColsInput" min="1" max="10"/>
+            <input name="ColsInput" id="ColsInput" min="1" max="10" @onchange="ColInput"/>
         </div>
     </div>
 }
@@ -95,6 +95,17 @@ else
     //   The code in this section should be 100% GUI related.  Otherwise
     //   place the code in the .cs file.
     // </remark>
+    private Spreadsheet mySpreadSheet = new ();
+
+    private int curRow;
+
+    private int curCol;
+
+    private string curCell = "A1";
+
+    private int rowInput=10;
+
+    private int colInput=10;
 
     /// <summary>
     ///   Direct reference to the html element (so we can focus it).
@@ -121,6 +132,7 @@ else
     private void FocusMainInput( int row, int col )
     {
         // FIXME: show the user which cell was clicked on
+        UpDatedRowColCell(curRow, curCol);
         UpdateToolbar();
         HighlightCell(row, col);
 
@@ -133,7 +145,7 @@ else
     /// </summary>
     private void UpdateToolbar()
     {
-        InputWidgetBackingStore = "hi there";
+        InputWidgetBackingStore = mySpreadSheet.GetCellContents(curCell)?.ToString() ?? "";
 
         StateHasChanged();
     }
@@ -147,14 +159,15 @@ else
     {
         // FIXME: shouldn't use magic constants (e.g., 10).
         // probably should just remember the last cell and empty its backing store.
-        for (int row=0;row<10;row++)
+        for (int row = 0; row < 10; row++)
         {
-            for (int col=0;col<10;col++)
+            for (int col = 0; col < 10; col++)
             {
                 CellsClassBackingStore[row, col] = string.Empty;
             }
         }
 
+        UpDatedRowColCell(theRow, theCol);
         CellsClassBackingStore[theRow, theCol] = "selected";
     }
 
@@ -165,14 +178,12 @@ else
     /// <param name="eventArgs"></param>
     private void ChangeSpreadsheetCellValue( ChangeEventArgs eventArgs )
     {
-        // FIXME: determine the currently select row, col (hint: it should be saved)
-        int row = 0;
-        int col = 0;
 
         string newInput = eventArgs.Value?.ToString() ?? "oops";
+        mySpreadSheet.SetContentsOfCell(curCell, newInput);
         InputWidgetBackingStore = newInput;
 
-        HandleUpdateCellInSpreadsheet( newInput, row, col );
+        HandleUpdateCellInSpreadsheet( newInput, curRow, curCol );
 
         UpdateToolbar();
     }
@@ -195,6 +206,23 @@ else
                 context.PreventNavigation();
             }
         }
+    }
+
+    private void RowInput(ChangeEventArgs eventArgs)
+    {
+        int.TryParse(eventArgs.Value?.ToString(), out rowInput);
+    }
+
+    private void ColInput(ChangeEventArgs eventArgs)
+    {
+        int.TryParse(eventArgs.Value?.ToString(), out colInput);
+    }
+
+    private void UpDatedRowColCell(int row, int col)
+    {
+        curRow = row;
+        curCol = col;
+        curCell = Alphabet[col] + "" + (curRow + 1);
     }
 
 }
