@@ -75,13 +75,13 @@ public partial class SpreadsheetGUI
     ///   <para> Gets or sets the data for all of the cells in the spreadsheet GUI. </para>
     ///   <remarks>Backing Store for HTML</remarks>
     /// </summary>
-    private string[,] CellsBackingStore { get; set; } = new string[ 10, 10 ];
+    private string[,] CellsBackingStore { get; set; } = new string[ 100, 26 ];
 
     /// <summary>
     ///   <para> Gets or sets the html class string for all of the cells in the spreadsheet GUI. </para>
     ///   <remarks>Backing Store for HTML CLASS strings</remarks>
     /// </summary>
-    private string[,] CellsClassBackingStore { get; set; } = new string[ 10, 10 ];
+    private string[,] CellsClassBackingStore { get; set; } = new string[ 100, 26 ];
 
     /// <summary>
     ///   Gets or sets a value indicating whether we are showing the save "popup" or not.
@@ -102,6 +102,16 @@ public partial class SpreadsheetGUI
     public bool HasSpreadSheetChanged(  )
     {
         return this.currentSpreadSheet!.Changed;
+    }
+
+    /// <summary>
+         ///   Example of how JavaScript can talk "back" to the C# side.
+         /// </summary>
+         /// <param name="message"> string from javascript side. </param>
+    [JSInvokable]
+    public void TestBlazorInterop(string message)
+    {
+        Debug.WriteLine($"JavaScript has send me a message: {message}");
     }
 
     /// <summary>
@@ -179,28 +189,24 @@ public partial class SpreadsheetGUI
     /// <param name="col"> The matrix column identifier. </param>
     private async void HandleUpdateCellInSpreadsheet( string newInput, int row, int col )
     {
-        ToolBarCellContents = TurnContenCellSameAsSetContent(row, col);
+        string cellName = CellNameFromRowCol(row, col);
         try
         {
-            string cellName = CellNameFromRowCol(row, col);
             IList<string> all_dependents = currentSpreadSheet!.SetContentsOfCell(cellName, newInput);
-            ToolBarCellContents = newInput;
-            CellsClassBackingStore[row, col] = newInput;
             SetValueForCellsBackingStore(row, col);
 
             foreach (string cell in all_dependents)
             {
-                ConvertCellNameToRowCol(cell, out int rowOfDepentdent, out int colOfDependent);
-                SetValueForCellsBackingStore(rowOfDepentdent, colOfDependent);
+                SetValueForCellsBackingStore(cell);
             }
         }
         catch (Exception e)
         {
-            if(e is CircularException)
+            if (e is CircularException)
             {
                 await JS.InvokeVoidAsync("alert", "Circular variables");
             }
-            else if(e is FormulaFormatException)
+            else if (e is FormulaFormatException)
             {
                 await JS.InvokeVoidAsync("alert", e.Message);
             }
@@ -333,7 +339,7 @@ public partial class SpreadsheetGUI
                     CellsClassBackingStore[row, col] = string.Empty; // Clear cell class if needed
                 }
             }
-
+            InputWidgetBackingStore = string.Empty;
             StateHasChanged();
         }
     }
@@ -349,36 +355,6 @@ public partial class SpreadsheetGUI
                 CellsClassBackingStore[row, col] = string.Empty;
             }
         }
-    }
-
-    // Handle dynamic resizing
-    private void UpdateGridSize(int newRows, int newCols)
-    {
-        if (newRows > MaxRows || newCols > MaxColumns)
-        {
-            return;
-        }
-
-        // Create new arrays while preserving existing data
-        string[,] newCellsBackingStore = new string[newRows, newCols];
-        string[,] newCellsClassBackingStore = new string[newRows, newCols];
-
-        for (int row = 0; row < inputRows; row++)
-        {
-            for (int col = 0; col < inputCols; col++)
-            {
-                newCellsBackingStore[row, col] = CellsBackingStore[row, col];
-                newCellsClassBackingStore[row, col] = CellsClassBackingStore[row, col];
-            }
-        }
-
-        inputRows = newRows;
-        inputCols = newCols;
-
-        CellsBackingStore = newCellsBackingStore;
-        CellsClassBackingStore = newCellsClassBackingStore;
-
-        StateHasChanged(); // Refresh the UI
     }
 
     private object SetValueForCellsBackingStore(string cellName)
