@@ -194,20 +194,16 @@ public partial class SpreadsheetGUI
                 SetValueForCellsBackingStore(rowOfDepentdent, colOfDependent);
             }
         }
-        catch (FormulaFormatException e)
+        catch (Exception e)
         {
-            currentSpreadSheet!.SetContentsOfCell(CellNameFromRowCol(row, col), oldContent);
-            messageError = e.Message;
-        }
-        catch (CircularException e)
-        {
-            currentSpreadSheet!.SetContentsOfCell(CellNameFromRowCol(row, col), oldContent);
-            messageError = e.Message;
-        }
-        catch
-        {
-            // a way to communicate to the user that something went wrong.
-            await JS.InvokeVoidAsync("alert", "Something went wrong.");
+            if(e is CircularException)
+            {
+                await JS.InvokeVoidAsync("alert", "Something went wrong.");
+            }
+            else if(e is FormulaFormatException)
+            {
+                await JS.InvokeVoidAsync("alert", e.Message);
+            }
         }
     }
 
