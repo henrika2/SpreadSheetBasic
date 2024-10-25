@@ -145,8 +145,7 @@ else
     /// </summary>
     private void UpdateToolbar()
     {
-        if (ToolBarCellContents==string.Empty)
-            InputWidgetBackingStore = "a";
+        InputWidgetBackingStore = ToolBarCellContents;
 
         StateHasChanged();
     }
