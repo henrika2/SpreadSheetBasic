@@ -47,8 +47,6 @@ public partial class SpreadsheetGUI
     private int inputRows = 10;
     private int inputCols = 10;
 
-    private string messageError = string.Empty;
-
     private Spreadsheet? currentSpreadSheet;
 
     /// <summary>
@@ -181,7 +179,6 @@ public partial class SpreadsheetGUI
     /// <param name="col"> The matrix column identifier. </param>
     private async void HandleUpdateCellInSpreadsheet( string newInput, int row, int col )
     {
-        string oldContent = TurnContenCellSameAsSetContent(row, col);
         try
         {
             IList<string> all_dependents = currentSpreadSheet!.SetContentsOfCell(CellNameFromRowCol(row, col), newInput);
@@ -198,7 +195,7 @@ public partial class SpreadsheetGUI
         {
             if(e is CircularException)
             {
-                await JS.InvokeVoidAsync("alert", "Something went wrong.");
+                await JS.InvokeVoidAsync("alert", "Circular variables");
             }
             else if(e is FormulaFormatException)
             {
@@ -391,7 +388,7 @@ public partial class SpreadsheetGUI
         }
         else
         {
-            this.CellsBackingStore[row, col] = curVal?.ToString() ?? string.Empty;
+            this.CellsBackingStore[row, col] = curVal?.ToString() ?? "null variable";
         }
 
         return this.CellsBackingStore[row, col];
@@ -407,7 +404,7 @@ public partial class SpreadsheetGUI
     private string TurnContenCellSameAsSetContent(int row, int col)
     {
         string cellName = CellNameFromRowCol(row, col);
-        object content = currentSpreadSheet?.GetCellContents(cellName) ?? string.Empty;
+        object content = currentSpreadSheet?.GetCellContents(cellName) ?? "null variable";
         if (content is string text)
         {
             return text;
