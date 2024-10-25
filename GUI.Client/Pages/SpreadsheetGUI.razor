@@ -132,6 +132,7 @@ else
     private void FocusMainInput( int row, int col )
     {
         UpDatedRowColCell(row, col);
+        ToolBarCellContents = TurnContenCellSameAsSetContent(row, col);
         UpdateToolbar();
         HighlightCell(row, col);
 
@@ -144,7 +145,8 @@ else
     /// </summary>
     private void UpdateToolbar()
     {
-        InputWidgetBackingStore = TurnContenCellSameAsSetContent(curRow, curCol);
+        if (ToolBarCellContents==string.Empty)
+            InputWidgetBackingStore = "a";
 
         StateHasChanged();
     }

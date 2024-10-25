@@ -179,9 +179,12 @@ public partial class SpreadsheetGUI
     /// <param name="col"> The matrix column identifier. </param>
     private async void HandleUpdateCellInSpreadsheet( string newInput, int row, int col )
     {
+        ToolBarCellContents = TurnContenCellSameAsSetContent(row, col);
         try
         {
-            IList<string> all_dependents = currentSpreadSheet!.SetContentsOfCell(CellNameFromRowCol(row, col), newInput);
+            string cellName = CellNameFromRowCol(row, col);
+            IList<string> all_dependents = currentSpreadSheet!.SetContentsOfCell(cellName, newInput);
+            ToolBarCellContents = newInput;
             CellsClassBackingStore[row, col] = newInput;
             SetValueForCellsBackingStore(row, col);
 
