@@ -1,4 +1,4 @@
-﻿@page "/spreadsheet"
+@page "/spreadsheet"
 @rendermode InteractiveAuto
 @inject IJSRuntime JS  // <remarks> Allows the "communication"/use of javascript </remarks>
 @inject NavigationManager Navigator
@@ -204,6 +204,10 @@ else
         }
     }
 
+    /// <summary>
+    /// Change this.inputRows to a new row that the user clicked.
+    /// </summary>
+    /// <param name="eventArgs">A event that user click a new row.</param>
     private void newInputRows(ChangeEventArgs eventArgs)
     {
         if (int.TryParse(eventArgs.Value?.ToString(), out int newRows))
@@ -215,6 +219,10 @@ else
         }
     }
 
+    /// <summary>
+    /// Change this.inputCols to a new col that the user clicked.
+    /// </summary>
+    /// <param name="eventArgs"> event that user click a new colunm.</param>
     private void newInputCols(ChangeEventArgs eventArgs)
     {
         if (int.TryParse(eventArgs.Value?.ToString(), out int newCols))
@@ -226,6 +234,11 @@ else
         }
     }
 
+    /// <summary>
+    /// Make the cell that user clicked as curCell.
+    /// </summary>
+    /// <param name="row">the row user clicked.</param>
+    /// <param name="col">the colunm user clicked.</param>
     private void UpDatedRowColCellToolBar(int row, int col)
     {
         curRow = row;
