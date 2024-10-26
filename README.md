@@ -1,11 +1,11 @@
 /*
 Author:     LAN QUANG HUYNH
-Partner:    None
+Partner:    Tiancheng Li
 Start Date: 1-Sep-2024
 Course:     CS 3505, University of Utah, School of Computing
 GitHub ID:  henrika2
-Repo:       https://github.com/uofu-cs3500-20-fall2024/spreadsheet-henrika2
-Commit Date: 16-October-2024 (of when submission is ready to be evaluated)
+Repo:       [https://github.com/uofu-cs3500-20-fall2024/spreadsheet-henrika2](https://github.com/uofu-cs3500-20-fall2024/spreadsheetpair-lan-and-lee.git)
+Commit Date: 25-October-2024 (of when submission is ready to be evaluated)
 Solution:   Spreadsheet
 Copyright:  CS 3500 and [LAN QUANG HUYNH] - This work may not be copied for use in Academic Coursework.
 */
@@ -36,6 +36,8 @@ The Spreadsheet solution for Assignment 6 builds on the core functionality devel
         - Description: Implemented formula evaluation, comparison (`==`, `!=`), and hashing for formula objects. Developed unit tests for formula evaluation using both standard functions and lambda expressions.
     5. Assignment Five:    Predicted Hours:  8     Actual Hours: 5
         - Description: Added comprehensive unit tests for the Spreadsheet class, validating core functionalities and edge cases, including circular dependencies and stress tests for performance.
-    5. Assignment Six:    Predicted Hours:  6     Actual Hours: 4
+    6. Assignment Six:    Predicted Hours:  6     Actual Hours: 4
         - Description: Completed the implementation of Save and Load methods using JSON serialization, enhanced unit tests, and added performance stress testing.
+    7. Assignment seven:  Predicted Hours:       ActualHours:
+        - Description: Completed the SpreadSheet user interface, including editing Spreadsheet and table reading and writing functions.
 */
