@@ -1,10 +1,167 @@
-﻿@page "/"
+﻿@* 
+  <file>Index.razor</file>
+  <company>UofU-CS3500</company>
+  <copyright>Copyright (c) 2024 UofU-CS3500. All rights reserved.</copyright>
+  <authors>LAN QUANG HUYNH and Tiancheng Li</authors>
+  <date>10/24/2024</date>
+  <summary>
+    This Razor component serves as the homepage for the Spreadsheet Application developed 
+    as part of the CS 3500 course at the University of Utah. It provides an overview of 
+    the spreadsheet's features, including editing cells, managing files, and additional 
+    safeguards. The page is structured with a navigation menu and content sections 
+    explaining how to use the application. It includes CSS styling for layout and design.
+  </summary>
+*@
+
+@page "/"
 
 <PageTitle>CS 3500</PageTitle>
 
 <h1>CS 3500 - Spreadsheet GUI in Blazor!</h1>
 
-<p> Click on the spreadsheet nav link!</p>
+<div class="content-wrapper">
+    <header>
+        <h1>Welcome to the Spreadsheet Application</h1>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="#overview">Overview</a></li>
+            <li><a href="#editing">Editing Cells</a></li>
+            <li><a href="#file-management">File Management</a></li>
+            <li><a href="#additional-features">Additional Features</a></li>
+        </ul>
+    </nav>
+
+    <main class="content">
+        <section id="overview">
+            <h2>Overview</h2>
+            <p>
+                The <strong>Spreadsheet Application</strong> offers a user-friendly interface for managing cell data.
+                It allows users to perform basic operations such as selecting, editing, clearing, saving, and loading spreadsheets.
+                Additionally, the application ensures data integrity with features like unsaved change alerts.
+            </p>
+        </section>
+
+        <section id="editing">
+            <h2>Changing Selections and Editing Cells</h2>
+            <p>
+                To change the active cell, simply click on any cell in the grid. The selected cell will be highlighted,
+                and its reference (e.g., A1, B2) will be displayed in the toolbar.
+                To edit the contents, click the cell, enter a new value or formula in the "Contents" input field, and press <strong>Enter</strong>.
+            </p>
+        </section>
+
+        <section id="file-management">
+            <h2>File Management</h2>
+
+            <div class="feature-box">
+                <h3>Saving Your Work</h3>
+                <p>
+                    Click the "Save" button, enter a file name, and confirm to save your work.
+                    Files are saved with a ".sprd" extension. If unsaved changes exist, a warning will prompt you before clearing or loading a new spreadsheet.
+                </p>
+            </div>
+
+            <div class="feature-box">
+                <h3>Clearing the Spreadsheet</h3>
+                <p>
+                    To clear the spreadsheet, click the "Clear" button. This will delete all data, but it won’t function
+                    if unsaved changes are present, ensuring you don’t lose data accidentally.
+                </p>
+            </div>
+
+            <div class="feature-box">
+                <h3>Loading a Spreadsheet</h3>
+                <p>
+                    To load a new spreadsheet, click the "Load" button and select a ".sprd" file. If the JSON in the file is invalid,
+                    an error message will guide you. All current data will be removed before loading the new file.
+                </p>
+            </div>
+        </section>
+
+        <section id="additional-features">
+            <h2>Additional Features</h2>
+            <p>
+                The Spreadsheet Application includes enhanced safeguards for data integrity, such as alerts for unsaved changes and
+                error messages for invalid file formats. These features ensure reliable and efficient file management.
+            </p>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Spreadsheet Application Guide</p>
+    </footer>
+</div>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+    }
+
+    header {
+        background-color: #4CAF50;
+        color: white;
+        padding: 10px 0;
+        text-align: center;
+    }
+
+    nav ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+        overflow: hidden;
+        background-color: #333;
+    }
+
+        nav ul li {
+            float: left;
+        }
+
+            nav ul li a {
+                display: block;
+                color: white;
+                text-align: center;
+                padding: 14px 16px;
+                text-decoration: none;
+            }
+
+                nav ul li a:hover {
+                    background-color: #ddd;
+                    color: black;
+                }
+
+    .content-wrapper {
+        padding: 20px;
+    }
+
+    h1, h2 {
+        color: #333;
+    }
+
+    p {
+        line-height: 1.6;
+    }
+
+    .feature-box {
+        background-color: #fff;
+        border: 1px solid #ccc;
+        padding: 15px;
+        margin: 20px 0;
+        border-radius: 5px;
+    }
+
+    footer {
+        background-color: #333;
+        color: white;
+        padding: 10px 0;
+        text-align: center;
+        margin-top: 20px;
+    }
+</style>
 
 <environment names="Development">
     <script src="_framework/aspnetcore-browser-refresh.js"></script>

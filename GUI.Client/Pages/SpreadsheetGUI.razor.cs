@@ -1,7 +1,8 @@
 // <copyright file="SpreadsheetGUI.razor.cs" company="UofU-CS3500">
 // Copyright (c) 2024 UofU-CS3500. All rights reserved.
 // </copyright>
-// Ignore Spelling: Spreadsheeeeeeeeee
+// <authors>LAN QUANG HUYNH and Tiancheng Li</authors>
+// <date>10/24/2024</date>/
 
 namespace SpreadsheetNS;
 

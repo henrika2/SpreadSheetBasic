@@ -2,7 +2,7 @@
 // Copyright (c) 2024 UofU-CS3500. All rights reserved.
 // </copyright>
 // <authors>LAN QUANG HUYNH</authors>
-// <date>11/04/2024</date>/
+// <date>10/04/2024</date>/
 
 // Written by Joe Zachary for CS 3500, September 2013
 // Update by Profs Kopta and de St. Germain and LAN QUANG HUYNH
