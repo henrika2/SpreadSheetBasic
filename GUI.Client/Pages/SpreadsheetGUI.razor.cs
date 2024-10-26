@@ -21,10 +21,10 @@ using System.Diagnostics;
 /// Copyright: CS 3500 and Tiancheng Li - This work may not
 ///            be copied for use in Academic Coursework.
 ///
-/// I, Tiancheng Li, certify that I wrote this code from scratch and
+/// We, Tiancheng Li and Lan Quang Huynh, certify that we wrote this code from scratch and
 /// did not copy it in part or whole from another source.  All
-/// references used in the completion of the assignments are cited.
-/// in my README file.
+/// references used in the completion of the assignments are cited
+/// in our README file.
 ///
 /// File Contents
 /// This file contain a graphical user interface for the Spreadsheet application.
