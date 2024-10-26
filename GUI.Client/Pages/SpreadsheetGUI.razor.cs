@@ -320,8 +320,7 @@ public partial class SpreadsheetGUI
         if (JSModule is not null)
         {
             string tempFilePath = Path.Combine(Path.GetTempPath(), FileSaveName);
-            this.currentSpreadSheet!.Save(tempFilePath);
-            string fileContent = File.ReadAllText(tempFilePath);
+            string fileContent = this.currentSpreadSheet!.GetJSON();
             var success = await JSModule.InvokeAsync<bool>("saveToFile", FileSaveName, fileContent);
             if (success)
             {
@@ -358,7 +357,10 @@ public partial class SpreadsheetGUI
                 }
             }
 
+            curRow = 0;
+            curCol = 0;
             InputWidgetBackingStore = string.Empty;
+            HighlightCell(curRow, curCol);
             StateHasChanged();
         }
     }
@@ -413,7 +415,7 @@ public partial class SpreadsheetGUI
     }
 
     /// <summary>
-    /// get cell's content.
+    /// get cell's content then tuen that into the way we set cell's content.
     /// </summary>
     /// <param name="row">the row of cell.</param>
     /// <param name="col">the colunm of cell.</param>

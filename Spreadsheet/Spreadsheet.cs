@@ -299,6 +299,49 @@ public class Spreadsheet
     }
 
     /// <summary>
+    /// Writes the contents of this spreadsheet in JSON form.
+    /// </summary>
+    /// <returns>The string in JSON form that contains the contents of the spreadsheet.</returns>
+    public string GetJSON()
+    {
+        // Create a dictionary for storing cells and their string representation
+        Dictionary<string, Dictionary<string, string>> cellsDict = new Dictionary<string, Dictionary<string, string>>();
+
+        foreach (var cell in cells)
+        {
+            string cellContent = string.Empty;
+            if (cell.Value.Contents is Formula formula)
+            {
+                cellContent = "=" + formula.ToString(); // Formulas are serialized with an '=' prefix
+            }
+            else if (cell.Value.Contents is double number)
+            {
+                cellContent = number.ToString(); // Doubles are serialized as is
+            }
+            else if (cell.Value.Contents is string stringContent)
+            {
+                cellContent = stringContent; // Strings are serialized as is
+            }
+
+            // Add to dictionary with the expected "StringForm"
+            cellsDict[cell.Key] = new Dictionary<string, string>
+                {
+                    { "StringForm", cellContent },
+                };
+        }
+
+        var jsonObject = new { Cells = cellsDict };
+
+        // Serialize to JSON
+        string json = JsonSerializer.Serialize(jsonObject, new JsonSerializerOptions { WriteIndented = true });
+
+        // Mark the spreadsheet as no longer "changed"
+        this.Changed = false;
+
+        return json;
+    }
+
+    /// <summary>
     ///   <para>
     ///     Writes the contents of this spreadsheet to the named file using a JSON format.
     ///     If the file already exists, overwrite it.
