@@ -39,5 +39,7 @@ The Spreadsheet solution for Assignment 6 builds on the core functionality devel
     6. Assignment Six:    Predicted Hours:  6     Actual Hours: 4
         - Description: Completed the implementation of Save and Load methods using JSON serialization, enhanced unit tests, and added performance stress testing.
     7. Assignment seven:  Predicted Hours:  12     ActualHours:18
-        - Description: Completed the SpreadSheet user interface, including editing Spreadsheet and table reading and writing functions.
+        - time spent effectively:5+4    time spent debugging:5+3     time spent learning tools and techniques:0+1  
+        - Description: Completed the SpreadSheet user interface, including editing Spreadsheet and table reading and writing functions. Our ability to estimate time is still fluctuating, mainly due to some unexpected 
+          situations, such as the strange bug mentioned in the project README.
 */
