@@ -60,7 +60,7 @@ public partial class SpreadsheetGUI
     private const int MaxColumns = 26;
 
     // Define max colunm and columns allowed.
-    private const int MaxRows = 99;
+    private const int MaxRows = 100;
 
     // Current grid size (initialized to 10x10)
     private int inputRows = 10;

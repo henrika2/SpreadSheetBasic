@@ -104,9 +104,9 @@ else
             <br/>
 
             <label for="RowsInput"> Number of Rows: </label>
-            <input name="RowsInput" id="RowsInput" placeholder="10" min="1" max="99" @onchange="newInputRows" />
+            <input name="RowsInput" id="RowsInput" placeholder=@inputRows min="1" max="100" @onchange="newInputRows" />
             <label for="ColsInput"> Number of Cols: </label>
-            <input name="ColsInput" id="ColsInput" placeholder="10" min="1" max="26" @onchange="newInputCols" />
+            <input name="ColsInput" id="ColsInput" placeholder=@inputCols min="1" max="26" @onchange="newInputCols" />
         </div>
     </div>
 }
@@ -227,12 +227,10 @@ else
     /// <param name="eventArgs">A event that user click a new row.</param>
     private void newInputRows(ChangeEventArgs eventArgs)
     {
-        if (int.TryParse(eventArgs.Value?.ToString(), out int newRows))
+        if (int.TryParse(eventArgs.Value?.ToString(), out int newRows) && newRows >= 1 && newRows <= 100)
         {
-            if (newRows <= MaxColumns)
-            {
-                inputRows = newRows;
-            }
+            // If valid, update inputRows
+            inputRows = newRows;
         }
     }
 
@@ -242,12 +240,10 @@ else
     /// <param name="eventArgs"> event that user click a new colunm.</param>
     private void newInputCols(ChangeEventArgs eventArgs)
     {
-        if (int.TryParse(eventArgs.Value?.ToString(), out int newCols))
+        if (int.TryParse(eventArgs.Value?.ToString(), out int newCols) && newCols >= 1 && newCols <= 100)
         {
-            if (newCols <= MaxColumns)
-            { 
-                inputCols = newCols; 
-            }
+            // If valid, update inputCols
+            inputCols = newCols;
         }
     }
 
