@@ -38,6 +38,6 @@ The Spreadsheet solution for Assignment 6 builds on the core functionality devel
         - Description: Added comprehensive unit tests for the Spreadsheet class, validating core functionalities and edge cases, including circular dependencies and stress tests for performance.
     6. Assignment Six:    Predicted Hours:  6     Actual Hours: 4
         - Description: Completed the implementation of Save and Load methods using JSON serialization, enhanced unit tests, and added performance stress testing.
-    7. Assignment seven:  Predicted Hours:       ActualHours:
+    7. Assignment seven:  Predicted Hours:  12     ActualHours:18
         - Description: Completed the SpreadSheet user interface, including editing Spreadsheet and table reading and writing functions.
 */
