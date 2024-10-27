@@ -913,10 +913,10 @@ public class SpreadsheetTests
         Spreadsheet sheet = new Spreadsheet();
 
         // Set content for cells
-        //sheet.SetContentsOfCell("A1", "5");               // Numeric value
-        //sheet.SetContentsOfCell("B1", "=A1+2");            // Formula with reference to A1
-        //sheet.SetContentsOfCell("C1", "=B1+A1");           // Formula with reference to B1 and A1
-        //sheet.SetContentsOfCell("D1", "\"A\"");            // String value with quotes
+        sheet.SetContentsOfCell("A1", "5");               // Numeric value
+        sheet.SetContentsOfCell("B1", "=A1+2");            // Formula with reference to A1
+        sheet.SetContentsOfCell("C1", "=B1+A1");           // Formula with reference to B1 and A1
+        sheet.SetContentsOfCell("D1", "\"A\"");            // String value with quotes
 
         string filename = "test_save.txt";
 
