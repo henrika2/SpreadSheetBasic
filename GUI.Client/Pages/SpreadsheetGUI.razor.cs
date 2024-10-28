@@ -56,16 +56,44 @@ using System.Diagnostics;
 /// </summary>
 public partial class SpreadsheetGUI
 {
-    // Define max rows and columns allowed.
+    /// <summary>
+    /// Define max rows and columns allowed.
+    /// </summary>
     private const int MaxColumns = 26;
 
-    // Define max colunm and columns allowed.
+    /// <summary>
+    /// Define max column and rows allowed.
+    /// </summary>
     private const int MaxRows = 100;
 
-    // Current grid size (initialized to 10x10)
+    /// <summary>
+    /// The current row selected in the spreadsheet.
+    /// </summary>
+    private int curRow = 0;
+
+    /// <summary>
+    /// The current column selected in the spreadsheet.
+    /// </summary>
+    private int curCol = 0;
+
+    /// <summary>
+    /// The name of the current cell (e.g., A1, B2).
+    /// </summary>
+    private string curCell = "A1";
+
+    /// <summary>
+    /// Stores the current number of input rows in the spreadsheet.
+    /// </summary>
     private int inputRows = 10;
+
+    /// <summary>
+    /// Stores the current number of input columns in the spreadsheet.
+    /// </summary>
     private int inputCols = 10;
 
+    /// <summary>
+    /// The Spreadsheet model instance used for managing spreadsheet data.
+    /// </summary>
     private Spreadsheet? currentSpreadSheet;
 
     /// <summary>
@@ -80,7 +108,7 @@ public partial class SpreadsheetGUI
     private IJSObjectReference? JSModule { get; set; }
 
     /// <summary>
-    ///   Gets or sets FIXME.
+    ///   Gets or sets name of the file to save the spreadsheet to.
     /// </summary>
     private string FileSaveName { get; set; } = "Spreadsheet.sprd";
 
@@ -430,5 +458,17 @@ public partial class SpreadsheetGUI
         }
 
         return "=" + content!.ToString();
+    }
+
+    /// <summary>
+    /// Make the cell that user clicked as curCell.
+    /// </summary>
+    /// <param name="row">the row user clicked.</param>
+    /// <param name="col">the colunm user clicked.</param>
+    private void UpDatedRowColCell(int row, int col)
+    {
+        curRow = row;
+        curCol = col;
+        curCell = CellNameFromRowCol(row, col);
     }
 }

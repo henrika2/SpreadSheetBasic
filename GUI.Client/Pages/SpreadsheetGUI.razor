@@ -54,10 +54,14 @@ else
 
             <label for="FormulaContent">Contents:</label>
             <input name="FormulaContent" id="FormulaContent" @ref="FormulaContentEditableInput" value="@InputWidgetBackingStore" @onchange="ChangeSpreadsheetCellValue" />
+            <button class="btn btn-secondary" @onclick="ToggleDarkMode">
+                @(isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode")
+            </button>
         </div>
     </div>
 
-    <div class="container" style="cursor: pointer;">
+    <div class="container" id="spreadsheet-container"
+         style="cursor: pointer; background-color: @(isDarkMode ? "#2e2e2e" : "white"); color: @(isDarkMode ? "white" : "black");">
         <div class="table-container">
             <div class="scrollable">
                 <table class="table table-bordered">
@@ -66,7 +70,9 @@ else
                             <th scope="col">&nbsp;</th>
                             @for ( int col = 0; col < inputCols; col++ )
                             {
-                                <th scope="col">@Alphabet[col]</th>
+                                <th scope="col" style="background-color: @(isDarkMode ? "#4e4e4e" : "white"); color: @(isDarkMode ? "white" : "black");">
+                                    @Alphabet[col]
+                                </th>
                             }
                         </tr>
                     </thead>
@@ -80,8 +86,12 @@ else
                                 {
                                     int r = row;
                                     int c = col;
-                                    <td class="@CellsClassBackingStore[r,c]"  @onclick="() => FocusMainInput(r,c)">
-                                        <span title="@CellsBackingStore[r,c] "class="SpreadsheetCell">@CellsBackingStore[r, c]</span>
+                                    <td class="@CellsClassBackingStore[r, c]"
+                                        @onclick="() => FocusMainInput(r, c)"
+                                        style="background-color: @(isDarkMode ? "#3b3b3b" : "white"); color: @(isDarkMode ? "white" : "black");">
+                                        <span title="@CellsBackingStore[r, c]" class="SpreadsheetCell">
+                                            @CellsBackingStore[r, c]
+                                        </span>
                                     </td>
                                 }
                             </tr>
@@ -118,11 +128,10 @@ else
     //   place the code in the .cs file.
     // </remark>
 
-    private int curRow = 0;
-
-    private int curCol = 0;
-
-    private string curCell = "A1";
+    /// <summary>
+    /// Indicates whether the spreadsheet is currently in dark mode.
+    /// </summary>
+    private bool isDarkMode = false;
 
     /// <summary>
     ///   Direct reference to the html element (so we can focus it).
@@ -248,15 +257,13 @@ else
     }
 
     /// <summary>
-    /// Make the cell that user clicked as curCell.
+    /// Toggle the dark mode theme.
     /// </summary>
-    /// <param name="row">the row user clicked.</param>
-    /// <param name="col">the colunm user clicked.</param>
-    private void UpDatedRowColCell(int row, int col)
+    private void ToggleDarkMode()
     {
-        curRow = row;
-        curCol = col;
-        curCell = CellNameFromRowCol(row, col);
+        isDarkMode = !isDarkMode;
+
+        StateHasChanged();
     }
 
 }

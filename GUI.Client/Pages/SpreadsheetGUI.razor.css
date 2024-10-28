@@ -108,3 +108,24 @@
     border: 1px solid black;
     margin-top: 10px;
 }
+
+body.dark-mode {
+    background-color: #2e2e2e;
+    color: white;
+}
+
+table.dark-mode {
+    background-color: #3b3b3b;
+    color: white;
+}
+
+button.dark-mode {
+    background-color: #5e5e5e;
+    color: white;
+}
+
+input.dark-mode {
+    background-color: #4e4e4e;
+    color: white;
+    border: 1px solid #6e6e6e;
+}
