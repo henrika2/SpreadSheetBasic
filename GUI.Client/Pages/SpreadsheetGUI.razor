@@ -148,7 +148,7 @@ else
     /// <param name="col"></param>
     private void FocusMainInput( int row, int col )
     {
-        UpDatedRowColCellToolBar(row, col);
+        UpDatedRowColCell(row, col);
         UpdateToolbar();
         HighlightCell(row, col);
 
@@ -181,7 +181,7 @@ else
             }
         }
 
-        UpDatedRowColCellToolBar(theRow, theCol);
+        UpDatedRowColCell(theRow, theCol);
         CellsClassBackingStore[theRow, theCol] = "selected";
     }
 
@@ -252,7 +252,7 @@ else
     /// </summary>
     /// <param name="row">the row user clicked.</param>
     /// <param name="col">the colunm user clicked.</param>
-    private void UpDatedRowColCellToolBar(int row, int col)
+    private void UpDatedRowColCell(int row, int col)
     {
         curRow = row;
         curCol = col;

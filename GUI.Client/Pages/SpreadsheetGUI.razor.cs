@@ -358,9 +358,8 @@ public partial class SpreadsheetGUI
                 }
             }
 
-            curRow = 0;
-            curCol = 0;
             InputWidgetBackingStore = string.Empty;
+            UpDatedRowColCell(0, 0);
             HighlightCell(curRow, curCol);
             StateHasChanged();
         }
