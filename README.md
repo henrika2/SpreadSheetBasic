@@ -38,6 +38,17 @@ The Spreadsheet solution for Assignment 6 builds on the core functionality devel
         - Description: Added comprehensive unit tests for the Spreadsheet class, validating core functionalities and edge cases, including circular dependencies and stress tests for performance.
     6. Assignment Six:    Predicted Hours:  6     Actual Hours: 4
         - Description: Completed the implementation of Save and Load methods using JSON serialization, enhanced unit tests, and added performance stress testing.
-    7. Assignment seven:  Predicted Hours:       ActualHours:
-        - Description: Completed the SpreadSheet user interface, including editing Spreadsheet and table reading and writing functions.
+    7. Assignment seven:  Predicted Hours:  12     ActualHours:18
+        - time spent effectively:5+4    time spent debugging:5+3     time spent learning tools and techniques:0+1  
+        - Description: Completed the SpreadSheet user interface, including editing Spreadsheet and table reading and writing functions. Our ability to estimate time is still fluctuating, mainly due to some unexpected 
+          situations, such as the strange bug mentioned in the project README.
+
+# Partnership:
+- In the pair programming phase of this assignment, Tiancheng Li completed the content of the SpreadsheetGUI.razor.cs file, and LAN QUANG HUYNH completed the content of SpreadsheetGUI.razor. In the subsequent debugging phase, LAN QUANG HUYNH modified part of the content of the SpreadsheetGUI.razor.cs file, and Tiancheng Li further completed the code comments and README.
+
+- In this collaboration, we created a new branch called PS7. This branch is used to save our code during pair programming. In subsequent individual programming, we will compare the codes of both parties and pull the new code before making any changes.
+
+- During this collaboration, we have corrected each other's mistakes and inappropriate programming habits. And during non-pair programming, we will take our own tasks to ensure that we solve different problems and avoid wasting time. 
+
+- The area we need to improve is communication between each other. Since both of us are non-native English speakers, the communication during pair programming is not efficient, which leads to misunderstandings about code issues. We should strengthen our communication with each other and use a more professional method to communicate about code issues.
 */

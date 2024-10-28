@@ -24,9 +24,9 @@ But LAN QUANG HUYNH and Tim finally failed to find out the cause of the bug. Tim
 
 ## Examples of Good Software Practice (GSP)
 
-1. **Separation of Concerns**: The project separates key functionalities like cell management, formula evaluation, and dependency tracking into distinct classes. This modularity enhances maintainability and testability.
+1. **Separation of Concerns**: Follow the MVC principle and write the model, view and control functions separately.
 
-2. **DRY Principle (Don't Repeat Yourself)**:  Repeated logic, such as cell name validation, is centralized in a single method (ValidateCellName). This reduces code duplication and improves maintainability.
+2. **DRY Principle (Don't Repeat Yourself)**:  Repeated logic, such as update tool bar, is centralized in a single method.
 
 3. **Well-Named and Documented Methods**: All methods are named descriptively, and XML comments are provided to explain their purpose, parameters, return values, and exceptions. This documentation ensures clarity for other developers and evaluators.
 
