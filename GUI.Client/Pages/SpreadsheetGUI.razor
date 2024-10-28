@@ -68,7 +68,7 @@ else
                     <thead>
                         <tr class="fixed-header">
                             <th scope="col">&nbsp;</th>
-                            @for ( int col = 0; col < inputCols; col++ )
+                            @for ( int col = 0; col < InputCols; col++ )
                             {
                                 <th scope="col" style="background-color: @(isDarkMode ? "#4e4e4e" : "white"); color: @(isDarkMode ? "white" : "black");">
                                     @Alphabet[col]
@@ -78,11 +78,11 @@ else
                     </thead>
 
                     <tbody>
-                        @for ( int row = 0; row < inputRows; row++ )
+                        @for ( int row = 0; row < InputRows; row++ )
                         {
                             <tr style="padding:0px !important;">
                                 <th style="padding:0px !important;" scope="row" class="fixed-column">@(row + 1)</th>
-                                @for ( int col = 0; col < inputCols; col++ )
+                                @for ( int col = 0; col < InputCols; col++ )
                                 {
                                     int r = row;
                                     int c = col;
@@ -114,9 +114,9 @@ else
             <br/>
 
             <label for="RowsInput"> Number of Rows: </label>
-            <input name="RowsInput" id="RowsInput" placeholder=@inputRows min="1" max="100" @onchange="newInputRows" />
+            <input name="RowsInput" id="RowsInput" placeholder=@InputRows min="1" max="100" @bind="InputRows" />
             <label for="ColsInput"> Number of Cols: </label>
-            <input name="ColsInput" id="ColsInput" placeholder=@inputCols min="1" max="26" @onchange="newInputCols" />
+            <input name="ColsInput" id="ColsInput" placeholder=@InputCols min="1" max="26" @bind="InputCols" />
         </div>
     </div>
 }
@@ -182,9 +182,9 @@ else
     /// <param name="theCol">the cell's col.</param>
     private void HighlightCell(int theRow, int theCol)
     {
-        for (int row = 0; row < inputRows; row++)
+        for (int row = 0; row < InputRows; row++)
         {
-            for (int col = 0; col < inputCols; col++)
+            for (int col = 0; col < InputCols; col++)
             {
                 CellsClassBackingStore[row, col] = string.Empty;
             }
@@ -227,32 +227,6 @@ else
             {
                 context.PreventNavigation();
             }
-        }
-    }
-
-    /// <summary>
-    /// Change this.inputRows to a new row that the user clicked.
-    /// </summary>
-    /// <param name="eventArgs">A event that user click a new row.</param>
-    private void newInputRows(ChangeEventArgs eventArgs)
-    {
-        if (int.TryParse(eventArgs.Value?.ToString(), out int newRows) && newRows >= 1 && newRows <= 100)
-        {
-            // If valid, update inputRows
-            inputRows = newRows;
-        }
-    }
-
-    /// <summary>
-    /// Change this.inputCols to a new col that the user clicked.
-    /// </summary>
-    /// <param name="eventArgs"> event that user click a new colunm.</param>
-    private void newInputCols(ChangeEventArgs eventArgs)
-    {
-        if (int.TryParse(eventArgs.Value?.ToString(), out int newCols) && newCols >= 1 && newCols <= 100)
-        {
-            // If valid, update inputCols
-            inputCols = newCols;
         }
     }
 

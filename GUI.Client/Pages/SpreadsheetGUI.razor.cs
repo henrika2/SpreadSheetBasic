@@ -84,12 +84,12 @@ public partial class SpreadsheetGUI
     /// <summary>
     /// Stores the current number of input rows in the spreadsheet.
     /// </summary>
-    private int inputRows = 10;
+    private int _inputRows = 10;
 
     /// <summary>
     /// Stores the current number of input columns in the spreadsheet.
     /// </summary>
-    private int inputCols = 10;
+    private int _inputCols = 10;
 
     /// <summary>
     /// The Spreadsheet model instance used for managing spreadsheet data.
@@ -134,6 +134,26 @@ public partial class SpreadsheetGUI
     ///   Gets or sets a value indicating whether we are showing the save "popup" or not.
     /// </summary>
     private bool SaveGUIView { get; set; }
+
+    /// <summary>
+    /// Gets or sets the number of input rows in the spreadsheet.
+    /// Automatically clamps values between 1 and 100.
+    /// </summary>
+    private int InputRows
+    {
+        get => _inputRows;
+        set => _inputRows = Math.Clamp(value, 1, 100);
+    }
+
+    /// <summary>
+    /// Gets or sets the number of input columns in the spreadsheet.
+    /// Automatically clamps values between 1 and MaxColumns.
+    /// </summary>
+    private int InputCols
+    {
+        get => _inputCols;
+        set => _inputCols = Math.Clamp(value, 1, 26);
+    }
 
     /// <summary>
     ///   Query the spreadsheet to see if it has been changed.
@@ -398,9 +418,9 @@ public partial class SpreadsheetGUI
     /// </summary>
     private void InitializeBackingStores()
     {
-        for (int row = 0; row < inputRows; row++)
+        for (int row = 0; row < InputRows; row++)
         {
-            for (int col = 0; col < inputCols; col++)
+            for (int col = 0; col < InputCols; col++)
             {
                 CellsBackingStore[row, col] = string.Empty;
                 CellsClassBackingStore[row, col] = string.Empty;
