@@ -332,7 +332,6 @@ public partial class SpreadsheetGUI
                 {
                     for (int col = 0; col < CellsBackingStore.GetLength(1); col++)
                     {
-                        string cellName = CellNameFromRowCol(row, col);
                         SetValueForCellsBackingStore(row, col);
                     }
                 }

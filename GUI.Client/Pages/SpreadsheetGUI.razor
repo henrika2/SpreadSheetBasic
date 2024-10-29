@@ -78,21 +78,38 @@ else
                     </thead>
 
                     <tbody>
-                        @for ( int row = 0; row < InputRows; row++ )
+                        @for (int row = 0; row < InputRows; row++)
                         {
                             <tr style="padding:0px !important;">
                                 <th style="padding:0px !important;" scope="row" class="fixed-column">@(row + 1)</th>
-                                @for ( int col = 0; col < InputCols; col++ )
+                                @for (int col = 0; col < InputCols; col++)
                                 {
                                     int r = row;
                                     int c = col;
-                                    <td class="@CellsClassBackingStore[r, c]"
-                                        @onclick="() => FocusMainInput(r, c)"
-                                        style="background-color: @(isDarkMode ? "#3b3b3b" : "white"); color: @(isDarkMode ? "white" : "black");">
-                                        <span title="@CellsBackingStore[r, c]" class="SpreadsheetCell">
-                                            @CellsBackingStore[r, c]
-                                        </span>
-                                    </td>
+                                    bool isSelected = r == curRow && c == curCol;
+                                    if (isSelected && isEditingCell)
+                                    {
+                                        <td class="@CellsClassBackingStore[r, c]"
+                                            @onclick="() => FocusMainInput(r, c)"
+                                            style="background-color: @(isDarkMode ? "#3b3b3b" : "white"); color: @(isDarkMode ? "white" : "black");">
+                                            <input type="text"
+                                                   class="cell-input"
+                                                   @onchange="ChangeSpreadsheetCellValue"
+                                                   @onkeydown="HandleCellInputKeyDown"
+                                                   @ref="currentEditingCellInput"
+                                                   style="width: 100%; height: 100%; background-color: transparent; color: inherit;" />
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td class="@CellsClassBackingStore[r, c]"
+                                            @onclick="() => FocusMainInput(r, c)"
+                                            style="background-color: @(isDarkMode ? "#3b3b3b" : "white"); color: @(isDarkMode ? "white" : "black");">
+                                            <span title="@CellsBackingStore[r, c]" class="SpreadsheetCell">
+                                                @CellsBackingStore[r, c]
+                                            </span>
+                                        </td>
+                                    }
                                 }
                             </tr>
                         }
@@ -159,9 +176,10 @@ else
     {
         UpDatedRowColCell(row, col);
         UpdateToolbar();
+        EnableCellEditing(row, col);
         HighlightCell(row, col);
 
-        FormulaContentEditableInput.FocusAsync(); // <remarks> move focus back to input widget. </remarks>
+        // FormulaContentEditableInput.FocusAsync(); <remarks> move focus back to input widget. </remarks>
     }
 
     /// <summary>
@@ -239,5 +257,48 @@ else
 
         StateHasChanged();
     }
+
+    private bool isEditingCell = false;
+    private ElementReference currentEditingCellInput;
+
+    private void EnableCellEditing(int row, int col)
+    {
+        isEditingCell = true;
+        curRow = row;
+        curCol = col;
+        StateHasChanged();
+    }
+
+    private void DisableCellEditing()
+    {
+        isEditingCell = false;
+        StateHasChanged();
+    }
+
+    private async Task HandleCellInputKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            HandleUpdateCellInSpreadsheet(CellsBackingStore[curRow, curCol], curRow, curCol);
+            DisableCellEditing();
+        }
+        else if (e.Key == "Escape")
+        {
+            DisableCellEditing();
+        }
+        else
+        {
+            await currentEditingCellInput.FocusAsync();
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JS.InvokeVoidAsync("addEventListener", "keydown", DotNetObjectReference.Create(this), "HandleKeyNavigation");
+        }
+    }
+
 
 }
