@@ -15,12 +15,10 @@ But LAN QUANG HUYNH and Tim finally failed to find out the cause of the bug. Tim
 
 ## Assignment Specific Topics
 
-- The `Save ` method allows the spreadsheet to be saved as a JSON file, ensuring that all cell contents are serialized correctly. The spreadsheet is marked as unchanged after a successful save.
-- The `Load ` method loads the spreadsheet from a JSON file, with error handling in place to ensure that the original spreadsheet is restored if any issues arise during loading.
-- The `SetContentsOfCell ` method simplifies content setting by determining if the input is a string, double, or formula and updating the cell accordingly, ensuring cell names are validated in one place.
-- The `GetCellValue ` method efficiently retrieves the value of a cell, ensuring that it is precomputed when content is set.
-- The spreadsheet indexer `[]`  allows direct access to cell values, providing a convenient way to interact with the spreadsheet.
-- The `Changed ` property tracks whether the spreadsheet has been modified since the last save or load, making it easier to manage the spreadsheet's state.
+- HandleSaveFile: Saves the spreadsheet as a JSON file, serializing all cell contents and marking the spreadsheet as unchanged after a successful save. The method also triggers a download in the browser.
+- HandleLoadFile: Loads the spreadsheet from a selected JSON file, validating the file content and ensuring error handling. If loading fails, the original spreadsheet state is restored to prevent data loss.
+- HandleClear: Clears the entire spreadsheet if it hasn't been modified or if the user confirms clearing unsaved changes. It resets all cell values to empty strings and updates the GUI to reflect the cleared state.
+- HandleUpdateCellInSpreadsheet: Updates the content of a specified cell based on user input, handling circular dependencies and formatting errors. It also updates dependent cells, if any, and ensures the GUI reflects the changes.
 
 ## Examples of Good Software Practice (GSP)
 
@@ -31,9 +29,20 @@ But LAN QUANG HUYNH and Tim finally failed to find out the cause of the bug. Tim
 3. **Well-Named and Documented Methods**: All methods are named descriptively, and XML comments are provided to explain their purpose, parameters, return values, and exceptions. This documentation ensures clarity for other developers and evaluators.
 
 ### Other Good Software Practices Achieved:
-- Comprehensive Testing: Unit tests cover all public methods and edge cases, ensuring correctness and robustness.
-- Custom Exception Handling: Meaningful exceptions (InvalidNameException, CircularException, SpreadsheetReadWriteException) are used to handle error cases gracefully.
-- Stress Testing: A StressTest validates the performance and scalability of the spreadsheet under heavy load (e.g., with thousands of cells and dependencies).
+- Version Control: The project was developed using Git, ensuring proper tracking of changes, easy collaboration, and a clear history of modifications through branches and commits. Using branches (e.g., PS7) kept the main branch stable and allowed safe experimentation.
+- Code Modularity: Functions were broken down into smaller, reusable components, adhering to the single-responsibility principle. This made the code easier to maintain, test, and understand.
+- User Input Validation: Comprehensive validation was implemented for user inputs, ensuring that data integrity is maintained and preventing invalid or unexpected entries from causing crashes or errors.
+
+### Branching
+- Branch Name: PS7
+- All development was done on the PS7 branch to maintain a clean main branch.
+- Merging from PS7 to the main branch was performed after all work was completed, ensuring no conflicts.
+- Commit Numbers: 1f97bfd
+
+###Time Reflection
+- Note that: time predict and actual time is in the README in SpreadSheet solution.
+- Estimate Accuracy: The initial estimate was slightly lower than the actual time spent, primarily due to unexpected debugging challenges and additional time for learning Blazor and C# integration techniques.
+- Effective Time Usage: Time was effectively used during pair programming, while debugging took more time than expected due to a challenging bug that persisted. This indicates a need to improve debugging strategies.
 
 ## Partnership:
 - In the pair programming phase of this assignment, Tiancheng Li completed the content of the SpreadsheetGUI.razor.cs file, and LAN QUANG HUYNH completed the content of SpreadsheetGUI.razor. In the subsequent debugging phase, LAN QUANG HUYNH modified part of the content of the SpreadsheetGUI.razor.cs file, and Tiancheng Li further completed the code comments and README.
