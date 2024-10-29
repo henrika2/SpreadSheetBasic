@@ -67,6 +67,16 @@ public partial class SpreadsheetGUI
     private const int MaxRows = 100;
 
     /// <summary>
+    /// Indicates whether a cell is currently being edited.
+    /// </summary>
+    private bool isEditingCell = false;
+
+    /// <summary>
+    /// Stores a reference to the currently active cell input element.
+    /// </summary>
+    private ElementReference currentEditingCellInput;
+
+    /// <summary>
     /// The current row selected in the spreadsheet.
     /// </summary>
     private int curRow = 0;
@@ -215,6 +225,7 @@ public partial class SpreadsheetGUI
             // The following three lines setup and test the
             // ability for Blazor to talk to javascript and vice versa.
             JSModule = await JS.InvokeAsync<IJSObjectReference>("import", "./Pages/SpreadsheetGUI.razor.js"); // create/read the javascript
+            await JS.InvokeVoidAsync("addEventListener", "keydown", DotNetObjectReference.Create(this), "HandleKeyNavigation");
             await JSModule.InvokeVoidAsync("SetDotNetInterfaceObject", DotNetObjectReference.Create(this)); // tell the javascript about us (dot net)
             await JSModule.InvokeVoidAsync("TestJavaScriptInterop", "Hello JavaScript!"); // test that it is working.  You could remove this.
             await FormulaContentEditableInput.FocusAsync(); // when we start up, put the focus on the input. you will want to do this anytime a cell is clicked.
@@ -335,6 +346,9 @@ public partial class SpreadsheetGUI
                         SetValueForCellsBackingStore(row, col);
                     }
                 }
+
+                InputWidgetBackingStore = TurnContenCellSameAsSetContent(0, 0);
+                UpdateToolbar();
 
                 // Force the UI to update
                 StateHasChanged();
@@ -489,5 +503,26 @@ public partial class SpreadsheetGUI
         curRow = row;
         curCol = col;
         curCell = CellNameFromRowCol(row, col);
+    }
+
+    /// <summary>
+    /// Enables editing of the specified cell.
+    /// </summary>
+    /// <param name="row">The row index of the cell to edit.</param>
+    /// <param name="col">The column index of the cell to edit.</param>
+    private void EnableCellEditing(int row, int col)
+    {
+        isEditingCell = true;
+        UpDatedRowColCell(row, col);
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Disables cell editing mode.
+    /// </summary>
+    private void DisableCellEditing()
+    {
+        isEditingCell = false;
+        StateHasChanged();
     }
 }

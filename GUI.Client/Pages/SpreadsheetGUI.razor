@@ -94,6 +94,7 @@ else
                                             style="background-color: @(isDarkMode ? "#3b3b3b" : "white"); color: @(isDarkMode ? "white" : "black");">
                                             <input type="text"
                                                    class="cell-input"
+                                                   value="@InputWidgetBackingStore"
                                                    @onchange="ChangeSpreadsheetCellValue"
                                                    @onkeydown="HandleCellInputKeyDown"
                                                    @ref="currentEditingCellInput"
@@ -103,6 +104,7 @@ else
                                     else
                                     {
                                         <td class="@CellsClassBackingStore[r, c]"
+                                            value="@InputWidgetBackingStore"
                                             @onclick="() => FocusMainInput(r, c)"
                                             style="background-color: @(isDarkMode ? "#3b3b3b" : "white"); color: @(isDarkMode ? "white" : "black");">
                                             <span title="@CellsBackingStore[r, c]" class="SpreadsheetCell">
@@ -176,7 +178,6 @@ else
     {
         UpDatedRowColCell(row, col);
         UpdateToolbar();
-        EnableCellEditing(row, col);
         HighlightCell(row, col);
 
         // FormulaContentEditableInput.FocusAsync(); <remarks> move focus back to input widget. </remarks>
@@ -209,6 +210,7 @@ else
         }
 
         UpDatedRowColCell(theRow, theCol);
+        EnableCellEditing(theRow, theCol);
         CellsClassBackingStore[theRow, theCol] = "selected";
     }
 
@@ -258,23 +260,11 @@ else
         StateHasChanged();
     }
 
-    private bool isEditingCell = false;
-    private ElementReference currentEditingCellInput;
-
-    private void EnableCellEditing(int row, int col)
-    {
-        isEditingCell = true;
-        curRow = row;
-        curCol = col;
-        StateHasChanged();
-    }
-
-    private void DisableCellEditing()
-    {
-        isEditingCell = false;
-        StateHasChanged();
-    }
-
+    /// <summary>
+    /// Handles keyboard input when editing a cell directly in the spreadsheet.
+    /// </summary>
+    /// <param name="e">Keyboard event arguments that contain information about the pressed key.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
     private async Task HandleCellInputKeyDown(KeyboardEventArgs e)
     {
         if (e.Key == "Enter")
@@ -291,14 +281,4 @@ else
             await currentEditingCellInput.FocusAsync();
         }
     }
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            await JS.InvokeVoidAsync("addEventListener", "keydown", DotNetObjectReference.Create(this), "HandleKeyNavigation");
-        }
-    }
-
-
 }
