@@ -339,11 +339,23 @@ public partial class SpreadsheetGUI
                 File.WriteAllText(tempFilePath, fileContent);
                 this.currentSpreadSheet!.Load(tempFilePath);
 
-                for (int row = 0; row < CellsBackingStore.GetLength(0); row++)
+                for (int row = 0; row < MaxRows; row++)
                 {
-                    for (int col = 0; col < CellsBackingStore.GetLength(1); col++)
+                    for (int col = 0; col < MaxColumns; col++)
                     {
-                        SetValueForCellsBackingStore(row, col);
+                        string value =SetValueForCellsBackingStore(row, col);
+                        if (value != string.Empty)
+                        {
+                            if (row >= InputRows)
+                            {
+                                InputRows = row + 1;
+                            }
+
+                            if (col >= InputCols)
+                            {
+                                InputCols = col + 1;
+                            }
+                        }
                     }
                 }
 
@@ -446,7 +458,7 @@ public partial class SpreadsheetGUI
     /// </summary>
     /// <param name="cellName">the cell need to be set value.</param>
     /// <returns>returns cell's data.</returns>
-    private object SetValueForCellsBackingStore(string cellName)
+    private string SetValueForCellsBackingStore(string cellName)
     {
         object curVal = this.currentSpreadSheet?.GetCellValue(cellName) ?? "null variable";
         ConvertCellNameToRowCol(cellName, out int row, out int col);
