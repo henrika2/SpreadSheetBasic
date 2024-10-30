@@ -285,11 +285,6 @@ else
     {
         if (e.Key == "Enter")
         {
-            HandleUpdateCellInSpreadsheet(CellsBackingStore[curRow, curCol], curRow, curCol);
-            DisableCellEditing();
-        }
-        else if (e.Key == "Escape")
-        {
             DisableCellEditing();
         }
         else
