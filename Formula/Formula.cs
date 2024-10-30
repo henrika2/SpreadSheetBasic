@@ -314,7 +314,7 @@ public class Formula
                 }
                 catch (ArgumentException)
                 {
-                    return new FormulaError($"Undefined variable: {token}");
+                    return new FormulaError($"Undefined variable: {token.ToUpper()}");
                 }
 
                 if (operatorStack.Count > 0 && (operatorStack.Peek() == "*" || operatorStack.Peek() == "/"))

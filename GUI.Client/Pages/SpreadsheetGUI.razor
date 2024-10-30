@@ -120,6 +120,7 @@ else
                                         <td class="@CellsClassBackingStore[r, c]"
                                             value="@InputWidgetBackingStore"
                                             @onclick="() => FocusMainInput(r, c)"
+                                            @ondblclick="() => EnableCellEditing(r, c)"
                                             style="background-color: @(isDarkMode ? "#3b3b3b" : "white"); color: @(isDarkMode ? "white" : "black");">
                                             <span title="@CellsBackingStore[r, c]" class="SpreadsheetCell">
                                                 @CellsBackingStore[r, c]
@@ -190,6 +191,10 @@ else
     /// <param name="col"></param>
     private void FocusMainInput( int row, int col )
     {
+        if (curRow != row || curCol != col)
+        {
+            DisableCellEditing();
+        }
         UpDatedRowColCell(row, col);
         UpdateToolbar();
         HighlightCell(row, col);
@@ -222,7 +227,6 @@ else
         }
 
         UpDatedRowColCell(theRow, theCol);
-        EnableCellEditing(theRow, theCol);
         CellsClassBackingStore[theRow, theCol] = "selected";
     }
 
