@@ -182,9 +182,9 @@ public partial class SpreadsheetGUI
     }
 
     /// <summary>
-         ///   Example of how JavaScript can talk "back" to the C# side.
-         /// </summary>
-         /// <param name="message"> string from javascript side. </param>
+    ///   Example of how JavaScript can talk "back" to the C# side.
+    /// </summary>
+    /// <param name="message"> string from javascript side. </param>
     [JSInvokable]
     public void TestBlazorInterop(string message)
     {
