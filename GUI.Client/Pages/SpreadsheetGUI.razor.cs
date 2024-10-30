@@ -343,7 +343,7 @@ public partial class SpreadsheetGUI
                 {
                     for (int col = 0; col < MaxColumns; col++)
                     {
-                        string value =SetValueForCellsBackingStore(row, col);
+                        string value = SetValueForCellsBackingStore(row, col);
                         if (value != string.Empty)
                         {
                             if (row >= InputRows)

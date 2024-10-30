@@ -1,4 +1,4 @@
-@* 
+@*
   <file>SpreadsheetGUI.razor</file>
   <company>UofU-CS3500</company>
   <copyright>Copyright (c) 2024 UofU-CS3500. All rights reserved.</copyright>
@@ -17,7 +17,7 @@
   in our README file.
 
 
-       
+
   <summary>
     This file contains the graphical user interface for the Spreadsheet application,
     developed as part of the CS 3500 course at the University of Utah.
@@ -34,7 +34,7 @@
 @inject IJSRuntime JS  // <remarks> Allows the "communication"/use of javascript </remarks>
 @inject NavigationManager Navigator
 
-@namespace SpreadsheetNS  
+@namespace SpreadsheetNS
 
 @using System.Diagnostics
 
@@ -49,9 +49,9 @@
 @if (SaveGUIView)
 {
     <label for="SavefileName">Name:</label>
-    <input id="SaveFileName" @bind="SaveFileName" type="text">
+    <input id="SaveFileName" @bind="FileSaveName" type="text">
 
-    <br/>
+    <br />
 
     <button class="btn btn-primary" @onclick="HandleSaveFile">Save</button>
     <button class="btn btn-primary" @onclick="() => ShowHideSaveGUI(false)">Cancel</button>
@@ -82,7 +82,7 @@ else
                     <thead>
                         <tr class="fixed-header">
                             <th scope="col">&nbsp;</th>
-                            @for ( int col = 0; col < InputCols; col++ )
+                            @for (int col = 0; col < InputCols; col++)
                             {
                                 <th scope="col" style="background-color: @(isDarkMode ? "#4e4e4e" : "white"); color: @(isDarkMode ? "white" : "black");">
                                     @Alphabet[col]
@@ -145,7 +145,7 @@ else
                 <InputFile id="inputwidget" name="abc" class="custom-input" type="file" OnChange="HandleLoadFile" />
             </div>
             <label for="inputwidget" class="btn btn-primary">Load</label>
-            <br/>
+            <br />
 
             <label for="RowsInput"> Number of Rows: </label>
             <input name="RowsInput" id="RowsInput" placeholder=@InputRows min="1" max="100" @bind="InputRows" />
@@ -157,7 +157,7 @@ else
 
 @code
 {
-    // <remark> 
+    // <remark>
     //   The code in this section should be 100% GUI related.  Otherwise
     //   place the code in the .cs file.
     // </remark>
@@ -179,17 +179,12 @@ else
     private string InputWidgetBackingStore = "";
 
     /// <summary>
-    ///   The name of the file that we want to download to.
-    /// </summary>
-    private string SaveFileName = "Spreadsheet.sprd";
-
-    /// <summary>
     ///   When a cell is clicked on, put the focus on the main
     ///   widget and update the toolbar.
     /// </summary>
     /// <param name="row"></param>
     /// <param name="col"></param>
-    private void FocusMainInput( int row, int col )
+    private void FocusMainInput(int row, int col)
     {
         if (curRow != row || curCol != col)
         {
@@ -211,7 +206,7 @@ else
     /// </summary>
     private void UpdateToolbar()
     {
-        InputWidgetBackingStore =TurnContenCellSameAsSetContent(curRow, curCol);;
+        InputWidgetBackingStore = TurnContenCellSameAsSetContent(curRow, curCol); ;
 
         StateHasChanged();
     }
@@ -240,13 +235,13 @@ else
     ///   the spreadsheet.
     /// </summary>
     /// <param name="eventArgs"></param>
-    private void ChangeSpreadsheetCellValue( ChangeEventArgs eventArgs )
+    private void ChangeSpreadsheetCellValue(ChangeEventArgs eventArgs)
     {
 
         string newInput = eventArgs.Value?.ToString() ?? "oops";
         InputWidgetBackingStore = newInput;
 
-        HandleUpdateCellInSpreadsheet( newInput, curRow, curCol );
+        HandleUpdateCellInSpreadsheet(newInput, curRow, curCol);
 
         UpdateToolbar();
     }
@@ -256,7 +251,7 @@ else
     /// </summary>
     /// <param name="context"></param>
     /// <returns></returns>
-    private async Task OnBeforeLeavePage( LocationChangingContext context )
+    private async Task OnBeforeLeavePage(LocationChangingContext context)
     {
         if (HasSpreadSheetChanged())
         {
