@@ -17,11 +17,11 @@ public partial class Error
 
     private string? RequestId { get; set; }
 
-    private bool ShowRequestId => !string.IsNullOrEmpty( RequestId );
+    private bool ShowRequestId => !string.IsNullOrEmpty(this.RequestId);
 
     /// <summary>
     ///  Generated code form the Blazor startup project.
     /// </summary>
-    protected override void OnInitialized( ) =>
-        RequestId = Activity.Current?.Id ?? HttpContext?.TraceIdentifier;
+    protected override void OnInitialized() =>
+        this.RequestId = Activity.Current?.Id ?? this.HttpContext?.TraceIdentifier;
 }

@@ -68,7 +68,7 @@ public class SpreadsheetTests
     /// <summary>
     /// Example of an invalid path
     /// </summary>
-    private const string InvalidFileName = "c:\\some\\local\\path\\on\\your\\drive";
+    private const string InvalidFileName = "/invalid/path/that/does/not/exist";
 
     /// <summary>
     /// File name used for creating invalid JSON content to test loading errors.
